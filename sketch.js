@@ -1,4 +1,4 @@
-var dict = [];
+evar dict = [];
 var sixLetterDict = [];
 
 var usedLetters = [];
@@ -71,10 +71,11 @@ function keyPressed() {
           unusedLetters.add(usedLetters.remove(i));
         }
 
-        for(let i = 0; i < 
+        for(let i = 0; i < unusedLetters.length; i++) {
+          unusedLetters.targetX = 120 + 60*i;
+        }
       }
-
-      
+    } else if(checkValidChar(key) >= 0) {
     }
   }
 }
