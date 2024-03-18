@@ -244,6 +244,8 @@ function keyReleased() {
       rackPos = [[width/2 - 180 + 0,height/2 + 120],[width/2 - 180 + 60,height/2 + 120],[width/2 - 180 + 120,height/2 + 120],[width/2 - 180 + 180,height/2 + 120],[width/2 - 180 + 240,height/2 + 120],[width/2 - 180 + 300,height/2 + 120]];
       points = 0;
       targetPoints = 0;
+      
+      usedWords = [];
       setRack();
       gameTimer = millis();
     }
