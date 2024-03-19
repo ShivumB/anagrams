@@ -72,6 +72,12 @@ function setRack() {
 //handle keys in game scene
 function gameKeyPressed() {
 
+  if(keyCode == 192) {
+    scene = "review";
+    validWords = [];
+    getValidWords(0, dict.length);
+  }
+
   //first, check if the key is available in the rack; if it is, use it.
   //flag is to break the loop checking available keys if a key is found
   let flag = false;
