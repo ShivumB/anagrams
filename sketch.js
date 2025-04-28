@@ -1,4 +1,3 @@
-var fullDict;
 var dict = [];
 var sixDict = [];
 
@@ -37,36 +36,24 @@ var gameTimer = 0;
 var scene = "title";
 
 function preload() {
-  fullDict = loadTable("dictionary.csv", "csv");
+  //from http://wordlist.aspell.net/12dicts-readme/
+  //2 of 12 inf, american
+
+  sixDict = loadStrings("dict-6.csv");
+  dict = loadStrings("dict-trunc.csv");
 }
 
 function setup() {
   createCanvas(windowWidth,windowHeight);
 
-  for(let i = 0; i < fullDict.getRowCount(); i++) {
-    let word = fullDict.getString(i, 0).toUpperCase();
-
-    if(word.length == 6) sixDict.push(word);
-    if(3 <= word.length && word.length <= 6) dict.push(word);
-  }
-
-  //set initial rackposition; before createCanvas, width and height are null, so set here
   rackPos = [[width/2 - 180 + 0,height/2 + 120],[width/2 - 180 + 60,height/2 + 120],[width/2 - 180 + 120,height/2 + 120],[width/2 - 180 + 180,height/2 + 120],[width/2 - 180 + 240,height/2 + 120],[width/2 - 180 + 300,height/2 + 120]];
-
 }
 
 //generate prompt
 function setRack() {
   let word = sixDict[(int)(Math.random()*sixDict.length)];
-  let temp = word.split("");
 
-  rack = [];
-  for(let i = 0; i < 6; i++) {
-    let r = (int)(Math.random() * temp.length);
-    rack.push(temp[r]);
-    temp.splice(r,1);
-  }
-
+  rack = shuffle(word.split(""));
 }
 
 //handle keys in game scene
@@ -196,32 +183,34 @@ function game() {
   prevT = millis();
 }
 
+function getCharCount(str, char) {
+  let count = 0;
+  for(const x of str) {
+    if (x == char) count++;
+  }
+  return count;
+}
+
 function getValidWords(start, end) {
 
-  let temp;
-  let word;
-  let pass;
+  let A_ind = 'A'.charCodeAt();
 
+  let freq = [0,0,  0,0,0,0,   0,0,0,0,   0,0,0,0,   0,0,0,0,  0,0,0,0,  0,0,0,0];
+    
+  for(let i = 0; i < rack.length; i++) {
+    freq[ rack[i].charCodeAt() - A_ind ] ++;
+  }
+
+  //for each word in dictionary,
   for(let i = start; i < end; i++) {
-    //copy the rack
-    temp = [rack[0],rack[1],rack[2],rack[3],rack[4],rack[5]];
     word = dict[i];
+
     pass = true;
-
-    //for every letter of the chosen word
-    for(let j = 0; j < word.length; j++) {
-
-      let k = temp.indexOf(word.substring(j, j + 1));
-
-      if(k >= 0) {
-        temp[k] = "-";
-      } else {
-        pass = false;
-        break;
-      }
+    for(const x of word) {
+      if(  getCharCount(word, x) > freq[x.charCodeAt() - A_ind]) pass = false;
     }
 
-    if(pass) validWords.push(word);
+    if(pass) validWords.push(dict[i]);
   }
 
 }
